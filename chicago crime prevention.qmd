@@ -36,11 +36,10 @@ This report analyzes Chicago's crime trends, with an emphasis on the correlation
 Chicago Crime rate have been a persistent issue ove the past decade, and just recently, there have been dramatic movement in the police department that puts people in concern of the stabiltiy in safety. 
 #Mayor Brandon Johnson, who was sworn in earlier this year, was one of the many to advocate for defunding the police in 2020 after Floyd was murdered by a Minneapolis police officer, saying “I don’t look at it as a slogan” and adding, “It’s an actual political goal," during a podcastThe city reduced the police department by 614 positions and cut funding by 2.7% in 2021 in the immediate aftermath of Floyd's murder. Since then, the department has grown in size and spending.
 
-While the city maintained staffing levels for 2024 at the same level as the previous year, the city reported a 30% increase in crime in 2022. Murders were down 13% from 804 in 2021 to 699 in 2022, but the city stated property crime drove the spike in crime and was up 44% and violent crime was up 1% in 2022 as compared to 2021.
+Despite maintaining the same staffing levels for 2024 as the previous year, the city reported a 30% increase in crime in 2022. While murders decreased by 13%, from 804 in 2021 to 699 in 2022, the city attributed the overall crime spike to a 44% rise in property crime and a 1% increase in violent crime compared to 2021. The tools and information that will be presented could help facilitate discussions about the causes of and solutions to the city's serious crime problem. This may also help answer a common question many Chicagoans face when they travel: "Is it really as bad as all the news reports suggest?". We need to take a look at Chicago's crime pattern in the past decade to help us understand the history and whetehr it is necessary to restaffing the police force. 
 
-tools and information they would present could help broach discussion of the causes and solutions to the city’s deadly crime problem, and perhaps even help to answer that oft-asked question that she—and likely many other Chicagoans—field when they travel: “‘Is it really as bad as all the news says it is?’” 
 # Research question
-What are the key factors influencing crime patterns in terms of type, location, and seasonality over time, and how can this information inform targeted crime prevention strategies?
+What are the key factors influencing crime patterns in terms of type, location, and seasonality over time, and how can this information inform targeted crime prevention strategies during the past decade?
 
 # Data
 ```{python} 
@@ -97,6 +96,9 @@ analysis_data.to_csv("/Users/suyuanfang/Desktop/Pyhton/final project/analysis_da
 ```
 
 # Data Visualization
+
+We utilizes Altair, a visualization library, to create an interactive bar chart that displays the top 15 crime types in Chicago. First, the Altair renderer is enabled using alt.renderers.enable("default") to ensure proper visualization within the Jupyter Notebook, and alt.data_transformers.disable_max_rows() removes any row limitations to handle larger datasets. The data preparation step involves calculating the frequency of each crime type using value_counts() on the Primary Type column of the dataset analysis_data, followed by resetting the index and renaming the columns to Crime Type and Count. This creates a summarized DataFrame with crime types and their respective counts. The Altair chart is constructed using alt.Chart() to initialize the data, .mark_bar() to specify a bar chart, and .encode() to configure the axes, bar colors, and tooltip interactivity. The x-axis displays crime types sorted in descending order, while the y-axis shows their corresponding counts. Additional properties, such as chart title, width, and height, are customized using .properties(). Finally, the chart is displayed with chart.show(), rendering a visually engaging and interactive bar chart titled “Top 15 Crime Types (Vertical),” where theft emerges as the most frequent crime type.
+
 ```{python} 
 import altair as alt
 alt.data_transformers.enable("default")
@@ -122,7 +124,7 @@ chart = (
 chart.show()
 ```
 
-We utilizes Altair, a visualization library, to create an interactive bar chart that displays the top 15 crime types in Chicago. First, the Altair renderer is enabled using alt.renderers.enable("default") to ensure proper visualization within the Jupyter Notebook, and alt.data_transformers.disable_max_rows() removes any row limitations to handle larger datasets. The data preparation step involves calculating the frequency of each crime type using value_counts() on the Primary Type column of the dataset analysis_data, followed by resetting the index and renaming the columns to Crime Type and Count. This creates a summarized DataFrame with crime types and their respective counts. The Altair chart is constructed using alt.Chart() to initialize the data, .mark_bar() to specify a bar chart, and .encode() to configure the axes, bar colors, and tooltip interactivity. The x-axis displays crime types sorted in descending order, while the y-axis shows their corresponding counts. Additional properties, such as chart title, width, and height, are customized using .properties(). Finally, the chart is displayed with chart.show(), rendering a visually engaging and interactive bar chart titled “Top 15 Crime Types (Vertical),” where theft emerges as the most frequent crime type.
+Then generate a bar chart showcasing the top 10 locations where crimes occur, revealing that "STREET" is the most common location for crimes. The data preparation begins by calculating the frequency of each location using the value_counts() method on the Location Description column of the analysis_data dataset, which is then converted into a DataFrame using reset_index(). The columns are renamed to Location Description and Count for clarity. The Altair chart is constructed by passing the top 10 locations (head(10)) to alt.Chart() and specifying a bar chart using .mark_bar(). The encode() function is used to configure the x-axis for location descriptions (nominal data sorted by count in descending order), the y-axis for crime counts, and the bar colors based on count values using a blue color scheme. Tooltips are added for interactivity, allowing users to hover over bars to view detailed information about each location and its corresponding count. The chart's appearance is further customized with a title, width, and height using .properties(). Finally, the chart is displayed with location_chart.show(), rendering a clear visualization where "STREET" is identified as the location with the highest number of crimes.
 
 ```{python} 
 location_counts = analysis_data['Location Description'].value_counts().reset_index()
@@ -146,10 +148,12 @@ location_chart = (
 location_chart.show()
 ```
 
-Then generate a bar chart showcasing the top 10 locations where crimes occur, revealing that "STREET" is the most common location for crimes. The data preparation begins by calculating the frequency of each location using the value_counts() method on the Location Description column of the analysis_data dataset, which is then converted into a DataFrame using reset_index(). The columns are renamed to Location Description and Count for clarity. The Altair chart is constructed by passing the top 10 locations (head(10)) to alt.Chart() and specifying a bar chart using .mark_bar(). The encode() function is used to configure the x-axis for location descriptions (nominal data sorted by count in descending order), the y-axis for crime counts, and the bar colors based on count values using a blue color scheme. Tooltips are added for interactivity, allowing users to hover over bars to view detailed information about each location and its corresponding count. The chart's appearance is further customized with a title, width, and height using .properties(). Finally, the chart is displayed with location_chart.show(), rendering a clear visualization where "STREET" is identified as the location with the highest number of crimes.
+
 
 
 # Heatmap for Monthly Crime Counts by Year
+
+For the heatmap, I first organized the data by resampling it to get monthly crime counts. I extracted the year and month from the data and converted numeric months into descriptive names like "Jan" for January. Using this processed data, I generated a heatmap where the x-axis represents the year, the y-axis represents the months (ordered from January to December), and the color intensity indicates the number of crimes in each month. Darker shades represent higher crime counts, and tooltips allow users to hover over each cell to view details. This visualization highlights trends, such as higher crime rates from 2008 to 2010 and the lowest average monthly crime rate in 2015.
 ```{python}
 monthly_data = pd.DataFrame(analysis_data.resample("M").size(), columns=["Crime Count"])
 monthly_data["Month"] = monthly_data.index.month.astype(str)
@@ -182,10 +186,14 @@ heatmap_chart = (
 
 heatmap_chart.show()
 ```
-For the heatmap, I first organized the data by resampling it to get monthly crime counts. I extracted the year and month from the data and converted numeric months into descriptive names like "Jan" for January. Using this processed data, I generated a heatmap where the x-axis represents the year, the y-axis represents the months (ordered from January to December), and the color intensity indicates the number of crimes in each month. Darker shades represent higher crime counts, and tooltips allow users to hover over each cell to view details. This visualization highlights trends, such as higher crime rates from 2008 to 2010 and the lowest average monthly crime rate in 2015.
+
 
 
 # Geospatial Map
+
+For the geospatial map, I used a GeoJSON file to overlay crime locations on a map of Chicago, showing the city’s boundaries for context. I cleaned the data by removing invalid latitude and longitude values to ensure accuracy. To handle the large dataset, I applied stratified random sampling, limiting the number of data points to 2,000 per year. This keeps the map clear and easy to interpret while still representing the data well.
+An interactive year selector allows users to filter crime locations for specific years, making it simple to focus on a particular time frame. The map uses a light gray base layer with black borders to display Chicago’s boundaries, and individual crime locations are plotted as semi-transparent blue circles. Tooltips provide details like latitude, longitude, and year when hovered over, adding interactivity.
+This map lets users explore how crime patterns change over time and across different areas of the city. It highlights trends, such as shifts in hotspots or consistent problem areas, offering useful insights for better understanding and decision-making.
 ```{python}
 import altair as alt
 import pandas as pd
@@ -241,10 +249,9 @@ year_data = map_marks_sampled[map_marks_sampled['Year'] == selected_year]
 
 ```
 
-For the geospatial map, I used a GeoJSON file to overlay crime locations on a map of Chicago, showing the city’s boundaries for context. I cleaned the data by removing invalid latitude and longitude values to ensure accuracy. To handle the large dataset, I applied stratified random sampling, limiting the number of data points to 2,000 per year. This keeps the map clear and easy to interpret while still representing the data well.
-An interactive year selector allows users to filter crime locations for specific years, making it simple to focus on a particular time frame. The map uses a light gray base layer with black borders to display Chicago’s boundaries, and individual crime locations are plotted as semi-transparent blue circles. Tooltips provide details like latitude, longitude, and year when hovered over, adding interactivity.
-This map lets users explore how crime patterns change over time and across different areas of the city. It highlights trends, such as shifts in hotspots or consistent problem areas, offering useful insights for better understanding and decision-making.
 
+We created a script that reads a GeoJSON file containing Chicago's boundary data and converts it into a format compatible with Altair. By filtering the dataset for valid latitude and longitude values and focusing specifically on the "THEFT" crime type, we ensured that the analysis exclusively concentrates on larceny offenses, keeping the data relevant. To improve visualization clarity and performance, we applied stratified random sampling, limiting the dataset to a maximum of 2,000 points per year.
+We used alt.selection_single() to implement a dynamic year selector, allowing users to interactively choose specific years from a dropdown menu. To ensure geographic accuracy, we employed the Mercator projection to render the background map of Chicago, with black borders and a light gray fill. Theft crime locations are overlaid as semi-transparent orange circles, and tooltips display details such as latitude, longitude, and year when hovered over. Our interactive visualization, "Theft Crime Locations in Chicago by Year (With Map Background)," combines the boundary map and crime data to help users explore spatial and temporal patterns of theft. This tool offers valuable insights into theft hotspots and trends over time, supporting data-driven decision-making and resource allocation.
 ```{python} 
 import altair as alt
 import pandas as pd
@@ -298,11 +305,9 @@ final_map.properties(
 
 ```
 
-We created a script that reads a GeoJSON file containing Chicago's boundary data and converts it into a format compatible with Altair. By filtering the dataset for valid latitude and longitude values and focusing specifically on the "THEFT" crime type, we ensured that the analysis exclusively concentrates on larceny offenses, keeping the data relevant. To improve visualization clarity and performance, we applied stratified random sampling, limiting the dataset to a maximum of 2,000 points per year.
-
-We used alt.selection_single() to implement a dynamic year selector, allowing users to interactively choose specific years from a dropdown menu. To ensure geographic accuracy, we employed the Mercator projection to render the background map of Chicago, with black borders and a light gray fill. Theft crime locations are overlaid as semi-transparent orange circles, and tooltips display details such as latitude, longitude, and year when hovered over. Our interactive visualization, "Theft Crime Locations in Chicago by Year (With Map Background)," combines the boundary map and crime data to help users explore spatial and temporal patterns of theft. This tool offers valuable insights into theft hotspots and trends over time, supporting data-driven decision-making and resource allocation.
 
 # Shiny App
+This Shiny app allows users to explore Chicago crime data interactively. It loads crime data from a CSV file and provides a dropdown menu where users can select one or more crime types to analyze. Based on the selected types, the app filters the data and dynamically generates a bar chart using Altair. The chart displays the number of crimes for each selected type, with color intensity representing the counts and tooltips showing details when hovering over the bars. The app ensures a smooth user experience by dynamically updating the chart in response to user input and handling cases where no data is selected.
 ```{python} 
 import pandas as pd
 from shiny import App, render, ui, reactive
@@ -370,8 +375,6 @@ app = App(app_ui, server)
 if __name__ == "__main__":
     app.run()
 ```
-
-This Shiny app allows users to explore Chicago crime data interactively. It loads crime data from a CSV file and provides a dropdown menu where users can select one or more crime types to analyze. Based on the selected types, the app filters the data and dynamically generates a bar chart using Altair. The chart displays the number of crimes for each selected type, with color intensity representing the counts and tooltips showing details when hovering over the bars. The app ensures a smooth user experience by dynamically updating the chart in response to user input and handling cases where no data is selected.
 
 # recommendations and conclusion
 In order to address these obstacles, it is imperative to implement a multifaceted strategy that combines immediate interventions with long-term structural reforms. It is advised that seasonal crime prevention programs be implemented to address specific crime categories during their peak periods. For example, the implementation of targeted measures during the winter can address property crimes, while the deployment of additional law enforcement resources and community outreach programs during the summer can help mitigate the increase in larceny.
